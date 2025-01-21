@@ -1,0 +1,3 @@
+[submodule "Skeleton-Aware-Sampling"]
+	path = Skeleton-Aware-Sampling
+	url = https://github.com/Pierreoo/Skeleton-Aware-Sampling.git
