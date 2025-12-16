@@ -65,5 +65,15 @@ python retrieval.py --ratio 64
 ## Citation
 If you find our work useful in your research, please consider citing:
 ```
-
+@INPROCEEDINGS{11125643,
+  author={Onghena, Pierre and Velasco-Forero, Santiago and Marcotegui, Beatriz},
+  booktitle={2025 International Conference on 3D Vision (3DV)}, 
+  title={MorphoSkel3D: Morphological Skeletonization of 3D Point Clouds for Informed Sampling in Object Classification and Retrieval}, 
+  year={2025},
+  volume={},
+  number={},
+  pages={1350-1359},
+  keywords={Point cloud compression;Geometry;Training;Solid modeling;Three-dimensional displays;Shape;Surface morphology;Sampling methods;Skeleton;Surface treatment},
+  doi={10.1109/3DV66043.2025.00128}
+}
 ```
