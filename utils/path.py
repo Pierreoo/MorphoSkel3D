@@ -23,11 +23,11 @@ def get_modelnetcore_path() -> Path:
 
 def get_modelnetmesh_path() -> Path:
     modelnet_path = get_modelnet_path()
-    return modelnet_path / 'ModelNetMeshFinal'
+    return modelnet_path / 'ModelNetMesh'
 
 def get_modelnetskel_path() -> Path:
     modelnet_path = get_modelnet_path()
-    return modelnet_path / 'ModelNetSkelFinal'
+    return modelnet_path / 'ModelNetSkel'
 
 def get_shapenetcore_path() -> Path:
     shapenet_path = get_shapenet_path()
@@ -35,15 +35,15 @@ def get_shapenetcore_path() -> Path:
 
 def get_shapenetmesh_path() -> Path:
     shapenet_path = get_shapenet_path()
-    return shapenet_path / 'ShapeNetMeshFinal'
+    return shapenet_path / 'ShapeNetMesh'
 
 def get_shapenetwatertight_path() -> Path:
     shapenet_path = get_shapenet_path()
-    return shapenet_path / 'ShapeNetWatertightFinal'
+    return shapenet_path / 'ShapeNetWatertight'
 
 def get_shapenetskel_path() -> Path:
     shapenet_path = get_shapenet_path()
-    return shapenet_path / 'ShapeNetSkelFinal'
+    return shapenet_path / 'ShapeNetSkel'
 
 def get_shapenetmat_path() -> Path:
     shapenet_path = get_shapenet_path()

@@ -3,6 +3,7 @@ import torch
 import numpy as np
 import time
 
+import argparse
 import open3d as o3d
 from plyfile import PlyData
 from torch.utils.data import Dataset
@@ -16,11 +17,6 @@ from utils.filerw import load_data_id
 from reconstruction.PoNQ import mesh_tools as mt
 from method.MS3D.dataset import skeletonization_shapenet
 from reconstruction.traditional.transformation import point_to_mesh, mesh_to_watertight
-
-root = get_shapenetcore_path()
-root_mesh = get_shapenetmesh_path()
-root_watertight = get_shapenetwatertight_path()
-root_skel = get_shapenetskel_path()
 
 
 class ShapeNetMorphoSkel3D(Dataset):
@@ -105,7 +101,19 @@ class ShapeNetMorphoSkel3D(Dataset):
 
 
 if __name__ == "__main__":
-    category = 'Airplane'
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--category', type=str, default='Airplane', help='ShapeNet category')
+    parser.add_argument('--tag', type=str, default='Demo', help='Tag name to append to root_skel path')
+    args = parser.parse_args()
+
+    root = get_shapenetcore_path()
+    root_mesh = get_shapenetmesh_path()
+    root_watertight = get_shapenetwatertight_path()
+    root_skel = get_shapenetskel_path()
+    if args.tag:
+        root_skel = str(root_skel) + args.tag
+
+    category = args.category
     manifold = 'skeleton'
     data_root = os.path.join(root, 'pointclouds/')
     test_list = load_data_id(os.path.join(root, 'data-split', f'all-test.txt'))

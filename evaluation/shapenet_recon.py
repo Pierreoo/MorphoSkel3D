@@ -1,6 +1,7 @@
 import os
 import torch
 import numpy as np
+import argparse
 
 import open3d as o3d
 from plyfile import PlyData
@@ -17,10 +18,6 @@ from reconstruction.PoNQ import mesh_tools as mt
 from method.MS3D.dataset import skeletonization_shapenet
 from reconstruction.traditional.transformation import point_to_mesh
 
-root = get_shapenetcore_path()
-root_mesh = get_shapenetmesh_path()
-root_skel = get_shapenetskel_path()
-root_mat = get_shapenetmat_path()
 
 
 class ShapeNetMorphoSkel3D(Dataset):
@@ -132,10 +129,22 @@ class ShapeNetMorphoSkel3D(Dataset):
 
 
 if __name__ == "__main__":
-    evaluation = 'recon'
-    category = 'Airplane'
-    distance = 'chamfer'
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--evaluation', type=str, default='recon')
+    parser.add_argument('--category', type=str, default='Airplane')
+    parser.add_argument('--distance', type=str, default='chamfer')
+    args = parser.parse_args()
+
+    evaluation = args.evaluation
+    category = args.category
+    distance = args.distance
     skel_points = 1024
+
+    root = get_shapenetcore_path()
+    root_mesh = get_shapenetmesh_path()
+    root_skel = get_shapenetskel_path()
+    root_mat = get_shapenetmat_path()
+
     data_root = os.path.join(root, 'pointclouds/')
     train_list = load_data_id(os.path.join(root, 'data-split', f'all-train.txt'))
     test_list = load_data_id(os.path.join(root, 'data-split', f'all-test.txt'))

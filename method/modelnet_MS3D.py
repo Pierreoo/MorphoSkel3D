@@ -1,6 +1,7 @@
 import os
 import glob
 import torch
+import argparse
 import numpy as np
 import open3d as o3d
 from tqdm import tqdm
@@ -11,13 +12,11 @@ sys.path.append(os.path.dirname(os.path.abspath('./utils')))
 from utils.path import get_modelnetcore_path, get_modelnetmesh_path, get_modelnetskel_path
 from utils import mesh_tools as mt
 from method.MS3D.dataset import skeletonization_modelnet
-from reconstruction.PoNQ.PoNQ import PoNQ
-from reconstruction.PoNQ.optimization import train_simple
+if torch.cuda.is_available():
+    from reconstruction.PoNQ.PoNQ import PoNQ
+    from reconstruction.PoNQ.optimization import train_simple
 from reconstruction.traditional.transformation import point_to_mesh
 
-root = get_modelnetcore_path()
-root_mesh = get_modelnetmesh_path()
-root_skel = get_modelnetskel_path()
 
 
 class ModelNetMorphoSkel3D:
@@ -107,5 +106,16 @@ class ModelNetMorphoSkel3D:
 
 
 if __name__ == "__main__":
-    ModelNetMorphoSkel3D(split='train', skel_points=1024, manifold_resolution=20000, num_vol_pts=10000000, reconstruction='ponq')
-    ModelNetMorphoSkel3D(split='test', skel_points=1024, manifold_resolution=20000, num_vol_pts=10000000, reconstruction='ponq')
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--split', type=str, default='test', help='ModelNet split (train or test)')
+    parser.add_argument('--tag', type=str, default='Demo', help='Tag name to append to root_skel path')
+    args = parser.parse_args()
+
+    root = get_modelnetcore_path()
+    root_mesh = get_modelnetmesh_path()
+    root_skel = get_modelnetskel_path()
+    if args.tag:
+        root_skel = str(root_skel) + args.tag
+
+    split = args.split
+    ModelNetMorphoSkel3D(split=split, skel_points=1024, manifold_resolution=20000, num_vol_pts=10000000, reconstruction='poisson')

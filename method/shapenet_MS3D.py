@@ -13,10 +13,6 @@ from utils import mesh_tools as mt
 from method.MS3D.dataset import skeletonization_shapenet
 from reconstruction.traditional.transformation import point_to_mesh
 
-root = get_shapenetcore_path()
-root_mesh = get_shapenetmesh_path()
-root_skel = get_shapenetskel_path()
-
 
 class ShapeNetMorphoSkel3D:
     def __init__(self, split='train', category=None, skel_points=1024, manifold_resolution=20000, num_vol_pts=1000000):
@@ -140,5 +136,9 @@ class ShapeNetMorphoSkel3D:
 
 
 if __name__ == "__main__":
+    root = get_shapenetcore_path()
+    root_mesh = get_shapenetmesh_path()
+    root_skel = get_shapenetskel_path()
+
     ShapeNetMorphoSkel3D(split='train', skel_points=1024, manifold_resolution=20000, num_vol_pts=10000000)
     ShapeNetMorphoSkel3D(split='test', skel_points=1024, manifold_resolution=20000, num_vol_pts=10000000)

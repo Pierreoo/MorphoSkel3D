@@ -60,6 +60,7 @@ def skeletonization(dataset, manifold_resolution=20000, num_vol_pts=100000, skel
         vertex_normals = np.asarray(mesh.vertex_normals)
         kdtree = o3d.geometry.KDTreeFlann(mesh)
         sampled_points = np.asarray(pcd.points)
+        p_surface = torch.Tensor(sampled_points)
         sampled_normals = np.zeros((sampled_points.shape[0], 3))
         for i, point in enumerate(sampled_points):
             [_, idx, _] = kdtree.search_knn_vector_3d(point, 1)
@@ -80,11 +81,11 @@ def skeletonization(dataset, manifold_resolution=20000, num_vol_pts=100000, skel
     nearest_neighbors = knn_neighbors(p_vol, k=20)
     p_skel, sdf_skel, sdf_diff_skel, sdf_dilate, sdf_diff = maximal_balls(p_vol, sdf_vol, nearest_neighbors, skel_points)
 
-    distance_field_visualization(p_vol, sdf_vol)
-    distance_field_visualization(p_vol, sdf_dilate)
-    distance_field_visualization(p_vol, sdf_diff)
-    distance_field_visualization(p_skel, sdf_skel)
-    skel_density_visualization(p_skel, sdf_skel, sdf_diff_skel)
+    # distance_field_visualization(p_vol, sdf_vol)
+    # distance_field_visualization(p_vol, sdf_dilate)
+    # distance_field_visualization(p_vol, sdf_diff)
+    # distance_field_visualization(p_skel, sdf_skel)
+    # skel_density_visualization(p_skel, sdf_skel, sdf_diff_skel)
     skel_surface_visualization(p_skel, p_surface)
 
 
