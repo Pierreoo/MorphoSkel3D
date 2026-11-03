@@ -20,7 +20,7 @@ from reconstruction.traditional.transformation import point_to_mesh
 
 
 class ModelNetMorphoSkel3D:
-    def __init__(self, split='train', skel_points=1024, manifold_resolution=20000, num_vol_pts=1000000, reconstruction='poisson'):
+    def __init__(self, skel_points=1024, manifold_resolution=20000, num_vol_pts=1000000, reconstruction='poisson'):
         self.root = root
         self.root_mesh = root_mesh
         self.root_skel = root_skel
@@ -34,12 +34,6 @@ class ModelNetMorphoSkel3D:
         self.classes = dict(zip(self.cat, range(len(self.cat))))
 
         device = 'cuda' if torch.cuda.is_available() else 'cpu'
-
-        shape_ids = {}
-        shape_ids['train'] = [line.rstrip() for line in open(os.path.join(self.root, 'modelnet40_train.txt'))]
-        shape_ids['test'] = [line.rstrip() for line in open(os.path.join(self.root, 'modelnet40_test.txt'))]
-        shape_names = ['_'.join(x.split('_')[0:-1]) for x in shape_ids[split]]
-        self.datapath = [(shape_names[i], os.path.join(self.root, shape_names[i], shape_ids[split][i]) + '.txt') for i in range(len(shape_ids[split]))]
 
         self.files = []
         self.class_numbers = []
@@ -107,7 +101,6 @@ class ModelNetMorphoSkel3D:
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('--split', type=str, default='test', help='ModelNet split (train or test)')
     parser.add_argument('--tag', type=str, default='Demo', help='Tag name to append to root_skel path')
     args = parser.parse_args()
 
@@ -117,5 +110,4 @@ if __name__ == "__main__":
     if args.tag:
         root_skel = str(root_skel) + args.tag
 
-    split = args.split
-    ModelNetMorphoSkel3D(split=split, skel_points=1024, manifold_resolution=20000, num_vol_pts=10000000, reconstruction='poisson')
+    ModelNetMorphoSkel3D(skel_points=1024, manifold_resolution=20000, num_vol_pts=10000000, reconstruction='poisson')

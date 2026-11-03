@@ -124,7 +124,7 @@ def sphere2point_distance_with_batch(p1, p2, distance):
     :param p2: size[B,M,3]
     :return: the distances from sphere p1 to the closest points in p2
     '''
-    p2_pnum = p2.size(0)
+    p1_pnum = p1.size(0)
     p1 = p1.unsqueeze(0)
     p2 = p2.unsqueeze(0)
     assert p1.size(0) == p2.size(0) and p1.size(2) == 4 and p2.size(2) == 3
@@ -151,7 +151,8 @@ def sphere2point_distance_with_batch(p1, p2, distance):
 
     if distance == 'chamfer':
         dist_scalar = torch.sum(min_dist)
-        return dist_scalar / p2_pnum
+        # averaged over the spheres (previously divided by the number of surface points)
+        return dist_scalar / p1_pnum
     elif distance == 'hausdorff':
         dist_scalar = torch.max(min_dist)
         return dist_scalar

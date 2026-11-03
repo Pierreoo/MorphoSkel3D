@@ -1,2 +1,6 @@
-/data/modelnet/
-/data/shapenet/
+/data/modelnet/*
+!/data/modelnet/README.md
+/data/shapenet/*
+!/data/shapenet/README.md
+__pycache__/
+.idea/

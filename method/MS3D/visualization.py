@@ -26,6 +26,7 @@ def skeletonization(dataset, manifold_resolution=20000, num_vol_pts=100000, skel
                 nx, ny, nz = vertex_data['nx'], vertex_data['ny'], vertex_data['nz']
                 input_points = np.column_stack((x, y, z))
                 input_normals = np.column_stack((nx, ny, nz))
+                p_surface = torch.Tensor(input_points)
                 surface_cloud = o3d.geometry.PointCloud()
                 surface_cloud.points = o3d.utility.Vector3dVector(input_points)
                 surface_cloud.normals = o3d.utility.Vector3dVector(input_normals)
@@ -74,6 +75,8 @@ def skeletonization(dataset, manifold_resolution=20000, num_vol_pts=100000, skel
     elif dataset == 'rationale':
         mesh = o3d.geometry.TriangleMesh.create_box()
         # mesh = o3d.geometry.TriangleMesh.create_torus()
+        pcd = mesh.sample_points_uniformly(number_of_points=10000)
+        p_surface = torch.Tensor(np.asarray(pcd.points))
 
     mesh_watertight = mesh_to_watertight(mesh, manifold_resolution)
     mesh_watertight.paint_uniform_color([0.2, 0.2, 0.2])
@@ -86,6 +89,7 @@ def skeletonization(dataset, manifold_resolution=20000, num_vol_pts=100000, skel
     # distance_field_visualization(p_vol, sdf_diff)
     # distance_field_visualization(p_skel, sdf_skel)
     # skel_density_visualization(p_skel, sdf_skel, sdf_diff_skel)
+    # zero_ms3d_visualization(p_vol, sdf_vol, sdf_diff)
     skel_surface_visualization(p_skel, p_surface)
 
 
@@ -138,6 +142,29 @@ def skel_density_visualization(p_skel, sdf_skel, sdf_diff_skel):
     plt.xlabel('MS3D(x)')
     plt.ylabel('points')
     plt.show()
+
+
+def zero_ms3d_visualization(points, sdf, ms3d):
+    mask = ms3d == 0
+    print(f'{int(mask.sum())} / {len(ms3d)} points with MS3D(x) = 0')
+    zero_cloud = o3d.geometry.PointCloud()
+    zero_cloud.points = o3d.utility.Vector3dVector(points[mask])
+
+    udf = sdf[mask].numpy()
+    sdf_min, sdf_max = np.min(udf), np.max(udf)
+    colors = plt.colormaps.get_cmap('viridis')((udf - sdf_min) / (sdf_max - sdf_min))[:, :3]
+    zero_cloud.colors = o3d.utility.Vector3dVector(colors)
+
+    fig = plt.figure(figsize=(6, 1))
+    ax = fig.add_axes([0.05, 0.5, 0.9, 0.15])
+    cmap = cm.viridis
+    norm = plt.Normalize(vmin=sdf_min, vmax=sdf_max)
+    sm = plt.cm.ScalarMappable(cmap=cmap, norm=norm)
+    sm.set_array([])
+    cbar = plt.colorbar(sm, cax=ax, orientation='horizontal')
+    cbar.ax.tick_params(axis='x', rotation=45)
+    plt.show()
+    o3d.visualization.draw_geometries([zero_cloud])
 
 
 def skel_surface_visualization(p_skel, p_surface):

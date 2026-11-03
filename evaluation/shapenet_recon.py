@@ -66,7 +66,7 @@ class ShapeNetMorphoSkel3D(Dataset):
                 vertex_data_mat = mat_file['vertex']
                 x_mat, y_mat, z_mat = vertex_data_mat['x'], vertex_data_mat['y'], vertex_data_mat['z']
                 if len(x_mat) < 2000:
-                    print(self.data_id[index])
+                    return -1
                 input_points_mat = np.column_stack((x_mat, y_mat, z_mat))
             except FileNotFoundError:
                 return -1
@@ -153,7 +153,8 @@ if __name__ == "__main__":
                                      point_num=2000, skel_points=skel_points, manifold_resolution=20000, num_vol_pts=10000000)
     # train_loader = DataLoader(dataset=train_data, batch_size=1, shuffle=False, drop_last=False)
     test_loader = DataLoader(dataset=test_data, batch_size=1, shuffle=False, drop_last=False)
-    index, all_recon_err = 1, 0
+    # mean over n shapes (previously divided by n + 1)
+    index, all_recon_err = 0, 0
     for idx, data in enumerate(test_loader):
         if data == -1:
             continue
